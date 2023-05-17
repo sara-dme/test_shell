@@ -19,7 +19,11 @@ char *_strcpy(char *dest, char *src)
 
         for (i = 0; i < src_len; i++)
         {
-                dest[i] = src[i];
+		if (src[i + 1] == '\n' && src[i] == ' ')
+		{
+		}
+		else
+                	dest[i] = src[i];
         }
         dest[i] = '\0';
 

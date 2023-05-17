@@ -18,7 +18,7 @@ char *cmd = NULL;
 int main(int argc, char **argv)
 {
 	char *line, *line_copy;
-	char *delim = "\n";
+	char *delim = " \n";
  	size_t sz = 0;
 	ssize_t num_char;
 	int num_tok = 0;
@@ -46,9 +46,8 @@ while (1)
 			perror("cmd null");
 			exit (-1);
 		}
-
 		/* a changer */
-		_strcpy(line_copy, line);
+		strcpy(line_copy, line);
 		/* split line */
 		tok = strtok(line, delim);
 
@@ -64,8 +63,8 @@ while (1)
 	tok = strtok(line_copy, delim);
 	for(i = 0; tok != NULL; i++)
 	{
-		argv[i] = malloc(sizeof(char) * _strlen(tok));
-		_strcpy(argv[i], tok);
+		argv[i] = malloc(sizeof(char) * strlen(tok));
+		strcpy(argv[i], tok);
 		tok = strtok(NULL, delim);
 	}
 	argv[i] = NULL;

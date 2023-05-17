@@ -10,7 +10,6 @@ void launch_prog(char **args)
 		perror("child process could not be created");
 		return;
 	}
-
 	if (pid == 0)
 	{
 
