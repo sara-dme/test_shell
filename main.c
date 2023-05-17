@@ -1,46 +1,54 @@
 #include "main.h"
 #include  <errno.h>
-void exec_cmd(char **toks);
 
-void exec_cmd(char **toks)
+void exec_cmd(char **args)
 {
-char *cmd = toks[0];
-	/*execute the command */
-	/*printf("cmd : %s", cmd);*/
-               if (execve(cmd, &toks[0], NULL) == -1)
+char *cmd = NULL;
+	if (args)
+	{
+		cmd =  args[0];
+		/*execute the command */
+	      if (execve(cmd, args, NULL) == -1)
                   {
                          perror("./shell: ");
 		  }
 }
-int main()
+}
+
+int main(int argc, char **argv)
 {
-	char *line;/* var to stock the input */
-	char *line_copy; /*copy of line */
+	char *line, *line_copy;
 	char *delim = "\n";
  	size_t sz = 0;
 	ssize_t num_char;
 	int num_tok = 0;
 	char *tok;
-	char **toks;
 	int i = 0;
 
-while (1) {
-                printf("($)");
+	(void) argc;
+
+while (1) 
+{
+                write(STDIN_FILENO,"#cisfun$ ", 9);
                 num_char = getline(&line, &sz, stdin);
 		if (num_char == -1)
-                             {
+                {
+			free(line);
+			perror("EXIT");
                         /*exiting the shell if failed or EOF */
-                        printf("exit ....\n");
-                        exit(-1);
+                        exit(EXIT_SUCCESS);
                 }
 		line_copy = malloc(sizeof(char) * num_char);
 		if (line_copy == NULL)
 		{
+			free(line);
+			free(line_copy);
 			perror("cmd null");
-			return (-1);
+			exit (-1);
 		}
-		/* make a copy of line */
-		strcpy(line_copy, line);
+
+		/* a changer */
+		_strcpy(line_copy, line);
 		/* split line */
 		tok = strtok(line, delim);
 
@@ -50,21 +58,22 @@ while (1) {
 		tok = strtok(NULL, delim);
 	}	
 	num_tok++;
-	toks = malloc(sizeof(char *) * num_tok);
+	argv = malloc(sizeof(char *) * num_tok);
 	
 	/*store tok in toks array */
 	tok = strtok(line_copy, delim);
 	for(i = 0; tok != NULL; i++)
 	{
-		toks[i] = malloc(sizeof(char) * strlen(tok));
-		strcpy(toks[i], tok);
+		argv[i] = malloc(sizeof(char) * _strlen(tok));
+		_strcpy(argv[i], tok);
 		tok = strtok(NULL, delim);
 	}
-	toks[i] = NULL;
-	exec_cmd(toks);
-	
+	argv[i] = NULL;
 
-	}
-
+	launch_prog(argv);
+}
+	free(line_copy);
+	free(line);
 	return (0);
+
 }
