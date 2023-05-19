@@ -15,7 +15,7 @@ char *cmd = NULL;
 }
 }
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **envp)
 {
 	char *line, *line_copy;
 	char *delim = " \n";
@@ -26,6 +26,7 @@ int main(int argc, char **argv)
 	int i = 0;
 
 	(void) argc;
+	(void) envp;
 
 while (1) 
 {
@@ -34,10 +35,11 @@ while (1)
 		if (num_char == -1)
                 {
 			free(line);
-			perror("EXIT");
+			/*perror("EXIT");*/
                         /*exiting the shell if failed or EOF */
                         exit(EXIT_SUCCESS);
                 }
+		fflush(stdin);
 		line_copy = malloc(sizeof(char) * num_char);
 		if (line_copy == NULL)
 		{
@@ -47,7 +49,7 @@ while (1)
 			exit (-1);
 		}
 		/* a changer */
-		strcpy(line_copy, line);
+		_strcpy(line_copy, line);
 		/* split line */
 		tok = strtok(line, delim);
 
@@ -63,12 +65,14 @@ while (1)
 	tok = strtok(line_copy, delim);
 	for(i = 0; tok != NULL; i++)
 	{
-		argv[i] = malloc(sizeof(char) * strlen(tok));
-		strcpy(argv[i], tok);
+		argv[i] = malloc(sizeof(char) * _strlen(tok));
+		_strcpy(argv[i], tok);
 		tok = strtok(NULL, delim);
 	}
 	argv[i] = NULL;
 
+	 find_path(envp);
+	cmds(argv, envp);
 	launch_prog(argv);
 }
 	free(line_copy);

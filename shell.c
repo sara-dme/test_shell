@@ -22,3 +22,17 @@ void launch_prog(char **args)
 	else
 		waitpid(pid,NULL,0);
 }
+
+void find_path(char **environ)
+{
+	int i = 0;
+	printf("=========%s =======\n", getenv("PATH"));
+	while (environ[i])
+	{
+	
+		printf("%d ----------->%s\n",i, environ[i]);
+		i++;
+
+	}
+	return;
+}
